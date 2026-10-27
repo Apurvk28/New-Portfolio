@@ -5,7 +5,7 @@ import { FEATURED_PROJECTS } from '../utils/projectsData.js';
 export default function FeaturedProjects({ onOpenProject }) {
   return (
     <section
-      className="w-full min-h-screen min-h-[100dvh] flex flex-col justify-center max-w-[1400px] mx-auto px-6 md:px-14 py-8 md:py-12"
+      className="w-full min-h-screen min-h-[100dvh] flex flex-col justify-center max-w-[1400px] mx-auto px-4 sm:px-6 md:px-14 py-8 md:py-12"
       data-purpose="featured-projects"
       id="projects"
     >

@@ -26,11 +26,11 @@ const Card = ({
   project,
 }) => {
   return (
-    <div className="h-screen flex items-center justify-center sticky top-0 px-4 sm:px-6 md:p-0">
+    <div className="h-screen flex items-center justify-center sticky top-0 px-2 sm:px-4 md:p-0">
       <div
         onClick={() => onSelect && onSelect(project || { title, src })}
-        className="relative flex flex-col w-full max-w-[850px] h-[350px] sm:h-[420px] md:h-[480px]
-        rounded-[28px] sm:rounded-[36px] overflow-hidden shadow-2xl border border-white/10 mx-auto
+        className="relative flex flex-col w-full max-w-[850px] aspect-[16/10] sm:aspect-[16/10] md:aspect-auto md:h-[480px]
+        rounded-[18px] sm:rounded-[28px] md:rounded-[36px] overflow-hidden shadow-2xl border border-white/10 mx-auto
         cursor-pointer select-none"
         style={{
           backgroundColor: color,
@@ -48,9 +48,9 @@ const Card = ({
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/20" />
         </div>
 
-        {/* ONLY Project Name - Bottom-left of card with original font size */}
-        <div className="absolute bottom-6 left-6 sm:bottom-8 sm:left-8 md:bottom-10 md:left-12 z-10">
-          <span className="font-bold relative text-5xl md:text-7xl">
+        {/* ONLY Project Name - Bottom-left of card with responsive font size */}
+        <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 md:bottom-10 md:left-12 z-10">
+          <span className="font-bold relative text-3xl sm:text-5xl md:text-7xl">
             <span
               className="relative z-10 font-tiemposHeadline font-black tracking-tight"
               style={{ color: textColor }}
