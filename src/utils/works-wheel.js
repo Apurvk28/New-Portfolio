@@ -9,9 +9,9 @@ const CARD_RATIO = 1.45; // card width / height
 const STEP = 40; // degrees between cards on the drum
 const DRUM = 2.22; // drum radius, in card heights - and everything below likewise
 const LENS = 2.7; // perspective distance
-const RING_R = 1.14; // ring radius
+const RING_R = 1.38; // ring radius - expanded to give clean clearance for center label
 const BOW = 1.82;
-const TITLE = 0.115; // ring label and front-card title
+const TITLE = 0.10; // ring label and front-card title
 const INDEX = 0.038; // the index down the right-hand side
 const CULL = 1.6;
 
@@ -100,7 +100,7 @@ export function initWorksWheel(container, options = {}) {
   if (!container) return null;
 
   const items = options.items || DEFAULT_WORKS;
-  const label = options.label || "Works '26";
+  const label = options.label || "Certificates";
   const action = options.action !== undefined ? options.action : "View";
   const onSelect = options.onSelect || null;
 
@@ -221,21 +221,21 @@ export function initWorksWheel(container, options = {}) {
   stageEl.appendChild(wheelEl);
   section.appendChild(stageEl);
 
-  // Center ring label ("Works '26" or "Landing Pages")
+  // Center ring label ("Certificates")
   const labelEl = document.createElement("div");
   labelEl.className = "pointer-events-none absolute inset-0 grid place-items-center tracking-tight font-black uppercase text-center text-neutral-900 select-none z-10 transition-opacity duration-300";
-  labelEl.textContent = label;
+  labelEl.textContent = label.replace(/'?26/g, "").trim();
   section.appendChild(labelEl);
 
-  // Front-card title
+  // Front-card title - cleanly centered above the drum on mobile, elegant side headline on desktop
   const titleEl = document.createElement("div");
-  titleEl.className = "pointer-events-none absolute top-1/2 left-[5%] md:left-[7%] -translate-y-1/2 tracking-tight font-black uppercase text-neutral-900 opacity-0 select-none z-10 max-w-[42%] leading-[1.05]";
+  titleEl.className = "pointer-events-none absolute top-2 sm:top-4 left-0 right-0 text-center md:top-1/2 md:left-[7%] md:right-auto md:text-left md:-translate-y-1/2 tracking-tight font-black uppercase text-neutral-900 opacity-0 select-none z-10 max-w-[90%] md:max-w-[38%] mx-auto md:mx-0 leading-[1.1] transition-opacity duration-300";
   titleEl.textContent = items[0] ? items[0].title : "";
   section.appendChild(titleEl);
 
-  // Side Index List
+  // Side Index List - shown cleanly on desktop viewports where space allows
   const indexList = document.createElement("ol");
-  indexList.className = "text-neutral-500 absolute top-[7%] right-[3%] text-right leading-[1.75] z-20 space-y-0.5 select-none font-mono";
+  indexList.className = "text-neutral-500 absolute hidden md:block top-[7%] right-[3%] text-right leading-[1.75] z-20 space-y-0.5 select-none font-mono";
   const indexButtons = [];
 
   items.forEach((item, i) => {
@@ -275,10 +275,11 @@ export function initWorksWheel(container, options = {}) {
   function calculateMetrics() {
     const w = stage.w || 800;
     const h = stage.h || 600;
-    const cardW = Math.min(h * CARD_H * CARD_RATIO, w * CARD_MAX_W);
+    const isMobile = w < 768;
+    const cardW = Math.min(h * CARD_H * CARD_RATIO, w * (isMobile ? 0.30 : CARD_MAX_W));
     const cardH = cardW / CARD_RATIO;
     const drumR = cardH * DRUM;
-    const ringR = cardH * RING_R;
+    const ringR = cardH * (isMobile ? 1.52 : RING_R);
     const ringScale = count
       ? clamp((((2 * Math.PI * ringR) / count) * 0.82) / (cardW || 1), 0.16, 1)
       : 1;
@@ -291,7 +292,7 @@ export function initWorksWheel(container, options = {}) {
       drumR,
       bow: cardH * BOW,
       depth: cardH * LENS,
-      title: Math.max(22, cardH * TITLE),
+      title: Math.max(isMobile ? 14 : 20, Math.min(cardH * TITLE, isMobile ? 18 : 34)),
       index: Math.max(10, cardH * INDEX),
     };
   }
@@ -307,8 +308,9 @@ export function initWorksWheel(container, options = {}) {
       card.style.marginTop = `${-currentMetrics.cardH / 2}px`;
     });
 
+    const isMobile = (stage.w || 800) < 768;
     labelEl.style.fontSize = `${currentMetrics.title}px`;
-    titleEl.style.fontSize = `${currentMetrics.title * 0.9}px`;
+    titleEl.style.fontSize = `${isMobile ? Math.min(22, Math.max(16, currentMetrics.title)) : currentMetrics.title * 0.9}px`;
   }
 
   applyMetrics();
