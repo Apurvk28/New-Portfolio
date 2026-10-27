@@ -13,7 +13,7 @@ export default function Certificates({ onOpenProject }) {
 
     const instance = initWorksWheel(container, {
       items: LANDING_PAGES,
-      label: "Certificates",
+      label: "Certificates '26",
       action: "View",
       onSelect: (index, item) => {
         onOpenProject(item);
@@ -61,7 +61,7 @@ export default function Certificates({ onOpenProject }) {
   return (
     <section
       ref={sectionRef}
-      className="relative z-20 bg-[#FAFAFA] w-full h-screen h-[100dvh] min-h-[100dvh] flex flex-col justify-between max-w-[1400px] mx-auto px-4 sm:px-6 md:px-14 py-6 md:py-8 overflow-hidden select-none"
+      className="w-full h-screen h-[100dvh] min-h-[100dvh] flex flex-col justify-between max-w-[1400px] mx-auto px-6 md:px-14 py-6 md:py-8 overflow-hidden select-none"
       data-purpose="certificates-section"
       id="certificates"
     >

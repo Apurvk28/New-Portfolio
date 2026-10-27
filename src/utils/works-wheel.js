@@ -9,9 +9,9 @@ const CARD_RATIO = 1.45; // card width / height
 const STEP = 40; // degrees between cards on the drum
 const DRUM = 2.22; // drum radius, in card heights - and everything below likewise
 const LENS = 2.7; // perspective distance
-const RING_R = 1.38; // ring radius - expanded to give clean clearance for center label
+const RING_R = 1.14; // ring radius
 const BOW = 1.82;
-const TITLE = 0.10; // ring label and front-card title
+const TITLE = 0.115; // ring label and front-card title
 const INDEX = 0.038; // the index down the right-hand side
 const CULL = 1.6;
 
@@ -100,7 +100,7 @@ export function initWorksWheel(container, options = {}) {
   if (!container) return null;
 
   const items = options.items || DEFAULT_WORKS;
-  const label = options.label || "Certificates";
+  const label = options.label || "Works '26";
   const action = options.action !== undefined ? options.action : "View";
   const onSelect = options.onSelect || null;
 
@@ -221,10 +221,10 @@ export function initWorksWheel(container, options = {}) {
   stageEl.appendChild(wheelEl);
   section.appendChild(stageEl);
 
-  // Center ring label ("Certificates")
+  // Center ring label ("Works '26" or "Landing Pages")
   const labelEl = document.createElement("div");
   labelEl.className = "pointer-events-none absolute inset-0 grid place-items-center tracking-tight font-black uppercase text-center text-neutral-900 select-none z-10 transition-opacity duration-300";
-  labelEl.textContent = label.replace(/'?26/g, "").trim();
+  labelEl.textContent = label;
   section.appendChild(labelEl);
 
   // Front-card title
@@ -275,11 +275,10 @@ export function initWorksWheel(container, options = {}) {
   function calculateMetrics() {
     const w = stage.w || 800;
     const h = stage.h || 600;
-    const isMobile = w < 768;
-    const cardW = Math.min(h * CARD_H * CARD_RATIO, w * (isMobile ? 0.30 : CARD_MAX_W));
+    const cardW = Math.min(h * CARD_H * CARD_RATIO, w * CARD_MAX_W);
     const cardH = cardW / CARD_RATIO;
     const drumR = cardH * DRUM;
-    const ringR = cardH * (isMobile ? 1.48 : RING_R);
+    const ringR = cardH * RING_R;
     const ringScale = count
       ? clamp((((2 * Math.PI * ringR) / count) * 0.82) / (cardW || 1), 0.16, 1)
       : 1;
@@ -292,7 +291,7 @@ export function initWorksWheel(container, options = {}) {
       drumR,
       bow: cardH * BOW,
       depth: cardH * LENS,
-      title: Math.max(isMobile ? 14 : 20, Math.min(cardH * TITLE, isMobile ? 20 : 34)),
+      title: Math.max(22, cardH * TITLE),
       index: Math.max(10, cardH * INDEX),
     };
   }
