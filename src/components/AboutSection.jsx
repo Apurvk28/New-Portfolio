@@ -21,13 +21,16 @@ export default function AboutSection({ onOpenContact, onOpenResume }) {
     let rafScheduled = false;
 
     function applyFrame(progress) {
+      const isMobile = window.innerWidth < 768;
       const startW = isMobile ? 280 : 300;
       const startH = isMobile ? 360 : 400;
 
       const maxWByViewport = window.innerWidth * 0.94;
       const maxWByHeight = window.innerHeight * 0.86 * ASPECT_RATIO;
       const endW = Math.min(maxWByViewport, maxWByHeight);
-      const endH = endW / ASPECT_RATIO;
+      const endH = isMobile
+        ? Math.min(window.innerHeight * 0.88, 650)
+        : endW / ASPECT_RATIO;
 
       const currentW = startW + progress * (endW - startW);
       const currentH = startH + progress * (endH - startH);
@@ -86,10 +89,10 @@ export default function AboutSection({ onOpenContact, onOpenResume }) {
 
       // Content reveals smoothly near finish
       if (mediaContentRef.current) {
-        if (progress >= 0.85) {
-          const contentFade = Math.min(1, (progress - 0.85) / 0.15);
+        if (progress >= 0.70) {
+          const contentFade = Math.min(1, (progress - 0.70) / 0.30);
           mediaContentRef.current.style.opacity = contentFade.toFixed(3);
-          mediaContentRef.current.style.pointerEvents = contentFade > 0.5 ? 'auto' : 'none';
+          mediaContentRef.current.style.pointerEvents = contentFade > 0.4 ? 'auto' : 'none';
           mediaContentRef.current.style.transform = `translateY(${((1 - contentFade) * 12).toFixed(1)}px)`;
         } else {
           mediaContentRef.current.style.opacity = '0';
@@ -222,39 +225,39 @@ export default function AboutSection({ onOpenContact, onOpenResume }) {
                 <div
                   ref={mediaContentRef}
                   id="sem-media-content"
-                  className="absolute inset-0 z-20 flex flex-col justify-between p-5 sm:p-7 md:p-9 pointer-events-none opacity-0 transition-all duration-300 select-none"
+                  className="absolute inset-0 z-20 flex flex-col justify-between p-4 sm:p-7 md:p-9 pointer-events-none opacity-0 transition-all duration-300 select-none overflow-y-auto no-scrollbar"
                 >
                   {/* Top Perimeter */}
-                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-white/10 pb-3">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 sm:gap-2 border-b border-white/10 pb-2.5 sm:pb-3 shrink-0">
                     <h3 className="text-xs sm:text-sm md:text-base font-extrabold uppercase tracking-tight text-white max-w-xl">
                       CRAFTING DISTINCTIVE DIGITAL EXPERIENCES THAT PUSH BOUNDARIES.
                     </h3>
-                    <span className="text-[10px] font-mono tracking-wider uppercase text-neutral-400 shrink-0">
+                    <span className="text-[9px] sm:text-[10px] font-mono tracking-wider uppercase text-neutral-400 shrink-0">
                       BASED IN INDIA &bull; WORLDWIDE
                     </span>
                   </div>
 
                   {/* Center Zone: OPEN */}
-                  <div className="flex-1 pointer-events-none min-h-[140px] md:min-h-[200px]"></div>
+                  <div className="flex-1 pointer-events-none min-h-2 sm:min-h-4 md:min-h-[120px]"></div>
 
                   {/* Bottom Perimeter */}
-                  <div className="pt-3 border-t border-white/10 flex flex-col md:flex-row md:items-end justify-between gap-4">
-                    <div className="max-w-xl space-y-2">
-                      <div className="flex items-center gap-2.5">
-                        <span className="text-[10px] font-bold tracking-widest uppercase text-neutral-300">
+                  <div className="pt-2.5 sm:pt-3 border-t border-white/10 flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-4 shrink-0">
+                    <div className="max-w-xl space-y-1.5 sm:space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] sm:text-[10px] font-bold tracking-widest uppercase text-neutral-300">
                           DISCIPLINE &amp; CRAFT
                         </span>
-                        <div className="h-px bg-white/15 w-6"></div>
-                        <span className="text-[10px] font-mono tracking-widest uppercase text-neutral-400">
+                        <div className="h-px bg-white/15 w-4 sm:w-6"></div>
+                        <span className="text-[9px] sm:text-[10px] font-mono tracking-widest uppercase text-neutral-400">
                           UI/UX &bull; WEB DESIGN &bull; WEBFLOW &bull; FIGMA
                         </span>
                       </div>
-                      <p className="text-xs sm:text-[12px] font-medium leading-relaxed tracking-wider uppercase text-neutral-300">
+                      <p className="text-[11px] sm:text-xs font-medium leading-relaxed tracking-wider uppercase text-neutral-300">
 AI-first Full-Stack (MERN) Web Developer with hands-on experience building production-ready web applications using React.js, Node.js, Express.js, MongoDB, and TypeScript. Experienced in integrating AI tools and APIs (Gemini, Claude, and Cursor) throughout the development lifecycle, from rapid prototyping to delivering AI-powered features, with a strong focus on RESTful API design and scalable backend architecture.
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-2.5 sm:gap-3 shrink-0 pt-1 md:pt-0 flex-wrap">
+                    <div className="flex items-center gap-2 sm:gap-3 shrink-0 pt-1.5 md:pt-0 flex-wrap">
                       <button
                         onClick={onOpenContact}
                         className="pointer-events-auto px-5 py-2.5 rounded-full bg-white text-black hover:bg-neutral-200 text-xs font-bold tracking-wider uppercase transition-all duration-200 inline-flex items-center gap-2 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
