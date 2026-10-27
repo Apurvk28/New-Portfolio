@@ -9,6 +9,8 @@ export default {
     extend: {
       fontFamily: {
         sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+        manrope: ['"Manrope"', 'sans-serif'],
+        tiemposHeadline: ['"Playfair Display"', 'Georgia', 'serif'],
       },
       colors: {
         brand: {
