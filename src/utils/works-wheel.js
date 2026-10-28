@@ -18,7 +18,7 @@ const CULL = 1.6;
 const WHEEL_UNITS = 900;
 const DRAG_UNITS = 420;
 const SETTLE = 140;
-const EASE = 0.12;
+const EASE = 0.14;
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -103,6 +103,7 @@ export function initWorksWheel(container, options = {}) {
   const label = options.label || "Certificates";
   const action = options.action !== undefined ? options.action : "View";
   const onSelect = options.onSelect || null;
+  const onNavigate = options.onNavigate || null;
 
   const count = items.length;
   const last = Math.max(count - 1, 0);
@@ -126,7 +127,7 @@ export function initWorksWheel(container, options = {}) {
   stageEl.tabIndex = 0;
   stageEl.role = "listbox";
   stageEl.setAttribute("aria-label", label);
-  stageEl.className = "absolute inset-0 cursor-grab touch-pan-x outline-none focus-visible:outline-2 focus-visible:outline-neutral-900 focus-visible:-outline-offset-4 active:cursor-grabbing";
+  stageEl.className = "absolute inset-0 cursor-grab touch-pan-y outline-none focus-visible:outline-2 focus-visible:outline-neutral-900 focus-visible:-outline-offset-4 active:cursor-grabbing";
 
   // Wheel (preserve-3d anchor)
   const wheelEl = document.createElement("div");
@@ -210,7 +211,11 @@ export function initWorksWheel(container, options = {}) {
           window.open(item.href, "_blank");
         }
       } else {
-        to(i + 1);
+        if (onNavigate) {
+          onNavigate(i + 1);
+        } else {
+          to(i + 1);
+        }
       }
     });
 
@@ -248,7 +253,11 @@ export function initWorksWheel(container, options = {}) {
       btn.className = "cursor-pointer transition-all duration-200 text-[11px] md:text-xs tracking-wider outline-none text-neutral-900 font-bold block ml-auto underline decoration-2 underline-offset-4";
     }
     btn.addEventListener("click", () => {
-      to(i + 1);
+      if (onNavigate) {
+        onNavigate(i + 1);
+      } else {
+        to(i + 1);
+      }
     });
     li.appendChild(btn);
     indexList.appendChild(li);
@@ -263,7 +272,7 @@ export function initWorksWheel(container, options = {}) {
     <svg class="w-3 h-3 text-neutral-500 animate-bounce" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    <span>SCROLL OR DRAG DRUM TO CYCLE</span>
+    <span>SCROLL TO CYCLE ↓</span>
   `;
   section.appendChild(hintPill);
 
@@ -276,12 +285,12 @@ export function initWorksWheel(container, options = {}) {
     const w = stage.w || 800;
     const h = stage.h || 600;
     const isMobile = w < 768;
-    const cardW = Math.min(h * CARD_H * CARD_RATIO, w * (isMobile ? 0.30 : CARD_MAX_W));
+    const cardW = Math.min(h * CARD_H * CARD_RATIO, w * (isMobile ? 0.58 : CARD_MAX_W));
     const cardH = cardW / CARD_RATIO;
     const drumR = cardH * DRUM;
-    const ringR = cardH * (isMobile ? 1.52 : RING_R);
+    const ringR = cardH * (isMobile ? 1.62 : 1.42);
     const ringScale = count
-      ? clamp((((2 * Math.PI * ringR) / count) * 0.82) / (cardW || 1), 0.16, 1)
+      ? clamp((((2 * Math.PI * ringR) / count) * 0.76) / (cardW || 1), 0.16, 1)
       : 1;
 
     return {
@@ -327,39 +336,7 @@ export function initWorksWheel(container, options = {}) {
     target = clamp(next, 0, last + 1);
   }
 
-  let isAcquired = false;
-  let hasStarted = false;
-
-  // Wheel interaction
-  let settlingTimer = null;
-  const onWheel = (event) => {
-    if (!isAcquired) {
-      // Allow page to scroll freely until section acquires the full screen
-      return;
-    }
-    const delta = event.deltaY;
-    if (delta < 0 && target <= 0.05) {
-      // At the start and scrolling up: pass to page scroll
-      return;
-    }
-    if (delta > 0 && target >= last + 0.95) {
-      // At the end and scrolling down: forward to footer
-      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-      return;
-    }
-    const next = target + delta / WHEEL_UNITS;
-    if (next > 0 && next < last + 1) {
-      event.preventDefault();
-    }
-    to(next);
-    clearTimeout(settlingTimer);
-    settlingTimer = setTimeout(() => {
-      to(Math.round(target));
-    }, SETTLE);
-  };
-  stageEl.addEventListener("wheel", onWheel, { passive: false });
-
-  // Pointer drag interaction
+  // Pointer drag interaction - forwards drag to window scroll seamlessly
   let isPointerDown = false;
   let dragStartY = 0;
   let dragDelta = 0;
@@ -381,7 +358,9 @@ export function initWorksWheel(container, options = {}) {
         }
       } catch (_) { }
     }
-    to(target + diff / DRAG_UNITS);
+    if (dragDelta > 6) {
+      window.scrollBy({ top: diff * 1.5, behavior: "auto" });
+    }
     dragStartY = event.clientY;
   });
 
@@ -393,9 +372,6 @@ export function initWorksWheel(container, options = {}) {
         stageEl.releasePointerCapture(event.pointerId);
       }
     } catch (_) { }
-    if (target > 1) {
-      to(Math.round(target));
-    }
   };
 
   stageEl.addEventListener("pointerup", endDrag);
@@ -405,10 +381,18 @@ export function initWorksWheel(container, options = {}) {
   stageEl.addEventListener("keydown", (event) => {
     if (event.key === "ArrowDown" || event.key === "ArrowRight") {
       event.preventDefault();
-      to(Math.round(target) + 1);
+      if (onNavigate) {
+        onNavigate(Math.min(count, Math.round(target) + 1));
+      } else {
+        to(Math.min(count, Math.round(target) + 1));
+      }
     } else if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
       event.preventDefault();
-      to(Math.round(target) - 1);
+      if (onNavigate) {
+        onNavigate(Math.max(0, Math.round(target) - 1));
+      } else {
+        to(Math.max(0, Math.round(target) - 1));
+      }
     }
   });
 
@@ -498,22 +482,22 @@ export function initWorksWheel(container, options = {}) {
 
   return {
     to,
-    setAcquired: (acquired) => {
-      isAcquired = acquired;
-      if (acquired && !hasStarted) {
-        hasStarted = true;
-        to(1);
-      }
+    setAcquired: () => {},
+    next: () => {
+      const nextVal = Math.min(count, Math.round(target) + 1);
+      if (onNavigate) onNavigate(nextVal);
+      else to(nextVal);
     },
-    next: () => to(Math.min(last + 1, Math.round(target) + 1)),
-    prev: () => to(Math.max(0, Math.round(target) - 1)),
+    prev: () => {
+      const prevVal = Math.max(0, Math.round(target) - 1);
+      if (onNavigate) onNavigate(prevVal);
+      else to(prevVal);
+    },
     getActive: () => active,
     destroy: () => {
       isRunning = false;
       cancelAnimationFrame(frameId);
       ro.disconnect();
-      stageEl.removeEventListener("wheel", onWheel);
-      clearTimeout(settlingTimer);
     }
   };
 }
