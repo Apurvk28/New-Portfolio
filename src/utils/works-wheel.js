@@ -9,9 +9,9 @@ const CARD_RATIO = 1.45; // card width / height
 const STEP = 40; // degrees between cards on the drum
 const DRUM = 2.22; // drum radius, in card heights - and everything below likewise
 const LENS = 2.7; // perspective distance
-const RING_R = 1.38; // ring radius - expanded to give clean clearance for center label
+const RING_R = 1.14; // ring radius
 const BOW = 1.82;
-const TITLE = 0.10; // ring label and front-card title
+const TITLE = 0.115; // ring label and front-card title
 const INDEX = 0.038; // the index down the right-hand side
 const CULL = 1.6;
 
@@ -285,12 +285,12 @@ export function initWorksWheel(container, options = {}) {
     const w = stage.w || 800;
     const h = stage.h || 600;
     const isMobile = w < 768;
-    const cardW = Math.min(h * CARD_H * CARD_RATIO, w * (isMobile ? 0.58 : CARD_MAX_W));
+    const cardW = Math.min(h * CARD_H * CARD_RATIO, w * CARD_MAX_W);
     const cardH = cardW / CARD_RATIO;
     const drumR = cardH * DRUM;
-    const ringR = cardH * (isMobile ? 1.62 : 1.42);
+    const ringR = cardH * RING_R;
     const ringScale = count
-      ? clamp((((2 * Math.PI * ringR) / count) * 0.76) / (cardW || 1), 0.16, 1)
+      ? clamp((((2 * Math.PI * ringR) / count) * 0.82) / (cardW || 1), 0.16, 1)
       : 1;
 
     return {
@@ -301,7 +301,7 @@ export function initWorksWheel(container, options = {}) {
       drumR,
       bow: cardH * BOW,
       depth: cardH * LENS,
-      title: Math.max(isMobile ? 14 : 20, Math.min(cardH * TITLE, isMobile ? 18 : 34)),
+      title: Math.max(22, cardH * TITLE),
       index: Math.max(10, cardH * INDEX),
     };
   }
