@@ -62,7 +62,11 @@ export default function AboutSection({ onOpenContact, onOpenResume }) {
 
       // Media overlay contrast
       if (mediaOverlayRef.current) {
-        mediaOverlayRef.current.style.opacity = Math.max(0.3, 0.8 - progress * 0.4).toFixed(3);
+        const isMobile = window.innerWidth < 768;
+        const overlayOpacity = isMobile
+          ? Math.max(0.75, 0.6 + progress * 0.25)
+          : Math.max(0.3, 0.8 - progress * 0.4);
+        mediaOverlayRef.current.style.opacity = overlayOpacity.toFixed(3);
       }
 
       // Title words translate outward and fade
@@ -218,21 +222,21 @@ export default function AboutSection({ onOpenContact, onOpenResume }) {
                 <div
                   ref={mediaOverlayRef}
                   id="sem-media-overlay"
-                  className="absolute inset-0 bg-gradient-to-b from-black/75 via-transparent to-black/85 rounded-xl transition-opacity duration-150 pointer-events-none"
+                  className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/55 to-black/90 md:from-black/75 md:via-transparent md:to-black/85 rounded-xl transition-opacity duration-150 pointer-events-none"
                 ></div>
 
                 {/* Minimal Aesthetic About Info - Perimeter Layout */}
                 <div
                   ref={mediaContentRef}
                   id="sem-media-content"
-                  className="absolute inset-0 z-20 flex flex-col justify-between p-4 sm:p-7 md:p-9 pointer-events-none opacity-0 transition-all duration-300 select-none overflow-y-auto no-scrollbar"
+                  className="absolute inset-0 z-20 flex flex-col justify-between p-3.5 sm:p-7 md:p-9 pointer-events-none opacity-0 transition-all duration-300 select-none overflow-y-auto no-scrollbar"
                 >
                   {/* Top Perimeter */}
-                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 sm:gap-2 border-b border-white/10 pb-2.5 sm:pb-3 shrink-0">
-                    <h3 className="text-xs sm:text-sm md:text-base font-extrabold uppercase tracking-tight text-white max-w-xl">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 sm:gap-2 border-b border-white/10 pb-2.5 sm:pb-3 shrink-0 bg-black/40 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none p-2.5 md:p-0 rounded-lg md:rounded-none">
+                    <h3 className="text-xs sm:text-sm md:text-base font-extrabold uppercase tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] max-w-xl">
                       CRAFTING DISTINCTIVE DIGITAL EXPERIENCES THAT PUSH BOUNDARIES.
                     </h3>
-                    <span className="text-[9px] sm:text-[10px] font-mono tracking-wider uppercase text-neutral-400 shrink-0">
+                    <span className="text-[9px] sm:text-[10px] font-mono tracking-wider uppercase text-neutral-300 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] shrink-0">
                       BASED IN INDIA &bull; WORLDWIDE
                     </span>
                   </div>
@@ -241,18 +245,18 @@ export default function AboutSection({ onOpenContact, onOpenResume }) {
                   <div className="flex-1 pointer-events-none min-h-2 sm:min-h-4 md:min-h-[120px]"></div>
 
                   {/* Bottom Perimeter */}
-                  <div className="pt-2.5 sm:pt-3 border-t border-white/10 flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-4 shrink-0">
+                  <div className="pt-2.5 sm:pt-3 border-t border-white/10 flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-4 shrink-0 bg-black/55 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-3 sm:p-4 md:p-0 rounded-xl md:rounded-none border border-white/10 md:border-transparent">
                     <div className="max-w-xl space-y-1.5 sm:space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] sm:text-[10px] font-bold tracking-widest uppercase text-neutral-300">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[9px] sm:text-[10px] font-bold tracking-widest uppercase text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
                           DISCIPLINE &amp; CRAFT
                         </span>
-                        <div className="h-px bg-white/15 w-4 sm:w-6"></div>
-                        <span className="text-[9px] sm:text-[10px] font-mono tracking-widest uppercase text-neutral-400">
+                        <div className="h-px bg-white/20 w-4 sm:w-6"></div>
+                        <span className="text-[9px] sm:text-[10px] font-mono tracking-widest uppercase text-neutral-200 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
                           UI/UX &bull; WEB DESIGN &bull; WEBFLOW &bull; FIGMA
                         </span>
                       </div>
-                      <p className="text-[11px] sm:text-xs font-medium leading-relaxed tracking-wider uppercase text-neutral-300">
+                      <p className="text-[11px] sm:text-xs font-medium leading-relaxed tracking-wider uppercase text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.95)]">
 AI-first Full-Stack (MERN) Web Developer with hands-on experience building production-ready web applications using React.js, Node.js, Express.js, MongoDB, and TypeScript. Experienced in integrating AI tools and APIs (Gemini, Claude, and Cursor) throughout the development lifecycle, from rapid prototyping to delivering AI-powered features, with a strong focus on RESTful API design and scalable backend architecture.
                       </p>
                     </div>
