@@ -14,7 +14,10 @@ export default function Hero({ onSelectService }) {
           className="text-[9.5vw] md:text-[8rem] lg:text-[9.5rem] font-extrabold uppercase leading-[0.85] tracking-tight"
         >
           <span className="block">
-            <span className="text-[#121212]">EXPLORE MY</span>
+            <span className="text-[#121212] inline-flex items-center justify-center gap-[0.32em]">
+              <span>EXPLORE</span>
+              <span>MY</span>
+            </span>
           </span>
           <span className="block">
             <span className="metallic-title">PORTFOLIO</span>
