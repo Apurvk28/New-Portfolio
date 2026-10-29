@@ -1,7 +1,10 @@
+import fableVideo from '../projects/video/fable_video.mov';
+
 export const FEATURED_PROJECTS = [
   {
     src: '/assets/projects/fable.png',
     image: '/assets/projects/fable.png',
+    video: fableVideo,
     alt: 'Fable',
     title: 'Fable',
     subtitle: 'Autonomous AI Agent Workshop & Execution Platform',

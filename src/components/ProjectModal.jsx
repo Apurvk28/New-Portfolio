@@ -14,6 +14,19 @@ const CERTIFICATE_VERIFY_URLS = {
 
 export default function ProjectModal({ project, onClose }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const videoRef = React.useRef(null);
+  const videoSrc = project?.video || null;
+
+  useEffect(() => {
+    if (videoRef.current && videoSrc) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {});
+      }
+    }
+  }, [videoSrc]);
 
   useEffect(() => {
     if (!project) {
@@ -154,15 +167,35 @@ export default function ProjectModal({ project, onClose }) {
               </div>
             )}
 
-            {/* Standard Project Image (Only for Featured Projects) */}
-            {imgSrc && !isCertificate && (
-              <div className="w-full rounded-2xl overflow-hidden border border-neutral-200/80 bg-neutral-100 shadow-inner p-1.5 flex items-center justify-center">
-                <img
-                  src={imgSrc}
-                  alt={project.alt || title}
-                  className="w-full h-auto max-h-[65vh] object-contain rounded-xl shadow-sm"
-                />
-              </div>
+            {/* Standard Project Media: Video (Loop) or Photo */}
+            {!isCertificate && (
+              videoSrc ? (
+                <div className="w-full rounded-2xl overflow-hidden border border-neutral-200/80 bg-neutral-100 shadow-inner p-1.5 flex items-center justify-center">
+                  <video
+                    ref={videoRef}
+                    key={videoSrc}
+                    src={videoSrc}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    poster={imgSrc}
+                    className="w-full h-auto max-h-[65vh] object-contain rounded-xl shadow-sm"
+                  >
+                    <source src={videoSrc} type="video/quicktime" />
+                    <source src={videoSrc} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              ) : imgSrc ? (
+                <div className="w-full rounded-2xl overflow-hidden border border-neutral-200/80 bg-neutral-100 shadow-inner p-1.5 flex items-center justify-center">
+                  <img
+                    src={imgSrc}
+                    alt={project.alt || title}
+                    className="w-full h-auto max-h-[65vh] object-contain rounded-xl shadow-sm"
+                  />
+                </div>
+              ) : null
             )}
 
             {/* Standard Project Details (Only for Featured Projects) */}
