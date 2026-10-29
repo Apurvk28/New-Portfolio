@@ -93,23 +93,6 @@ export const FEATURED_PROJECTS = [
     ],
     tools: ['Python', 'FastAPI', 'React', 'BPMN 2.0 (Camunda)', 'Pinecone / FAISS', 'Tesseract / Google Vision', 'PostgreSQL'],
     stats: 'End-to-end autonomous document lifecycle processing with OCR confidence validation and policy-grounded RAG.'
-  },
-  {
-    src: '/assets/projects/commingsoon.png',
-    image: '/assets/projects/commingsoon.png',
-    alt: 'Coming Soon',
-    title: 'Coming Soon',
-    subtitle: 'Spatial Agent Protocol',
-    description: 'Exploratory spatial compute interfaces and autonomous agent coordination systems currently in stealth.',
-    tag: 'In Development',
-    color: '#18181B',
-    textColor: '#FFFFFF',
-    link: null,
-    github: null,
-    category: 'RESEARCH & EXPERIMENTS',
-    deliverables: ['Autonomous Agent Workflows', 'Spatial Canvas Rendering', 'Context Engineering', 'Stealth Sandbox'],
-    tools: ['React', 'Three.js', 'WebGPU', 'LLMs'],
-    stats: 'Currently undergoing alpha stress tests and private sandbox benchmarking.'
   }
 ];
 
